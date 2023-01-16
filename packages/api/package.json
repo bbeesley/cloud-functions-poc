@@ -20,7 +20,7 @@
   "scripts": {
     "test": "xo # && ava",
     "compile": "tsc",
-    "push": "npx @beesley/push-function-zips --inputPath '.' --include 'dist/**' --include 'package.json' --regions 'eu' --buckets deployments-poc-cloud-functions-artifacts --function-key sc/cloud-functions-poc/api-${GITHUB_SHA:-latest} --platform GCP"
+    "push": "export REF=${GITHUB_SHA:-latest} && npx @beesley/push-function-zips --inputPath '.' --include 'dist/**' --include 'package.json' --regions 'eu' --buckets deployments-poc-cloud-functions-artifacts --function-key sc/cloud-functions-poc/api-${REF:0:10} --platform GCP"
   },
   "type": "module",
   "bugs": {
