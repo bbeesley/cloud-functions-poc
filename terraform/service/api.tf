@@ -13,49 +13,6 @@ locals {
   })
 }
 
-resource "google_project_service" "iam_api" {
-  service = "iam.googleapis.com"
-
-  timeouts {
-    create = "30m"
-    update = "40m"
-  }
-
-  disable_dependent_services = true
-}
-
-resource "google_project_service" "cloudfunctions_api" {
-  service = "cloudfunctions.googleapis.com"
-
-  timeouts {
-    create = "30m"
-    update = "40m"
-  }
-
-  disable_dependent_services = true
-}
-
-resource "google_project_service" "artifactregistry_api" {
-  service = "artifactregistry.googleapis.com"
-
-  timeouts {
-    create = "30m"
-    update = "40m"
-  }
-
-  disable_dependent_services = true
-}
-resource "google_project_service" "cloudbuild_api" {
-  service = "cloudbuild.googleapis.com"
-
-  timeouts {
-    create = "30m"
-    update = "40m"
-  }
-
-  disable_dependent_services = true
-}
-
 resource "google_service_account" "account" {
   account_id   = local.service_account_id
   display_name = "Service account for the cloud fn api"
