@@ -119,12 +119,6 @@ resource "google_compute_backend_service" "lb_default" {
   name                  = "${var.service_name_short}-backend-${var.environment}"
   load_balancing_scheme = "EXTERNAL_MANAGED"
 
-  backend {
-    balancing_mode  = "UTILIZATION"
-    capacity_scaler = 0.85
-    group           = google_compute_region_network_endpoint_group.lb_default[0].id
-  }
-
   dynamic "backend" {
     for_each = var.run_regions
     content {
