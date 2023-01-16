@@ -137,7 +137,7 @@ resource "google_compute_backend_service" "lb_default" {
     content {
       balancing_mode  = "UTILIZATION"
       capacity_scaler = 0.85
-      group           = data.google_compute_region_network_endpoint_group.lb_default[each.value].id
+      group           = data.google_compute_region_network_endpoint_group.lb_default[backend.value].id
     }
   }
 
