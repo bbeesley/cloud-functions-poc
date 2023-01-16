@@ -2,7 +2,8 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "terraform:fmt": "find terraform -type d -maxdepth 1 -exec terraform fmt -write=true \\{\\} \\;"
+    "terraform:fmt": "find terraform -type d -maxdepth 1 -exec terraform fmt -write=true \\{\\} \\;",
+    "bootstrap": "npx lerna bootstrap"
   },
   "workspaces": [
     "packages/*"
