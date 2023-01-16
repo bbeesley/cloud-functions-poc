@@ -81,7 +81,6 @@ resource "google_cloudfunctions2_function" "function" {
   }
 
   service_config {
-    service                          = local.api_function_name
     max_instance_count               = 3
     min_instance_count               = 1
     available_memory                 = "256M"
@@ -103,7 +102,7 @@ resource "google_cloudfunctions2_function" "function" {
 resource "google_cloud_run_service_iam_binding" "noauth" {
   location = var.gcp_region
   service  = local.api_function_name
-  role     = "roles/viewer"
+  role     = "roles/run.invoker"
   members = [
     "allUsers",
   ]
