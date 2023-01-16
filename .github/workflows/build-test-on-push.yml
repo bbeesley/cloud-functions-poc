@@ -19,5 +19,6 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: trigger deployment
-        run: |
-          gh api --method POST repos/${{ github.repository }}/deployments -f ref=${{ github.sha }} -f environment=dev -f description="Deploy ref ${{ github.sha }} to def" -f required_contexts=false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PA_TOKEN }}
+        run: gh api --method POST repos/${{ github.repository }}/deployments -f ref=${{ github.sha }} -f environment=dev -f description="Deploy ref ${{ github.sha }} to def" -f required_contexts=false
