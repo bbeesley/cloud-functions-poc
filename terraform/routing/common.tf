@@ -42,8 +42,8 @@ variable "domain_name" {
   type        = string
 }
 variable "run_regions" {
-  type    = set(string)
-  default = toset(["europe-west2"])
+  type    = list(string)
+  default = ["europe-west2"]
 }
 
 locals {
@@ -120,7 +120,7 @@ resource "google_compute_global_forwarding_rule" "lb_default" {
 }
 
 data "google_compute_region_network_endpoint_group" "lb_default" {
-  for_each = var.run_regions
+  for_each = toset(var.run_regions)
   name = "${var.service_name_short}-neg-${var.environment}"
   region = each.value
 }
@@ -130,7 +130,7 @@ resource "google_compute_backend_service" "lb_default" {
   load_balancing_scheme = "EXTERNAL_MANAGED"
 
   dynamic "backend" {
-    for_each = var.run_regions
+    for_each = toset(var.run_regions)
     content {
       balancing_mode  = "UTILIZATION"
       capacity_scaler = 0.85
