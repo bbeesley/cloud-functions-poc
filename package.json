@@ -10,7 +10,7 @@
     "packages/*"
   ],
   "devDependencies": {
-    "lerna": "^6.4.0",
+    "lerna": "^6.4.1",
     "xo": "^0.53.1"
   },
   "xo": {
