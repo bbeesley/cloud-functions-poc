@@ -81,6 +81,7 @@ resource "google_cloudfunctions2_function" "function" {
   }
 
   service_config {
+    service                          = local.api_function_name
     max_instance_count               = 3
     min_instance_count               = 1
     available_memory                 = "256M"
@@ -97,6 +98,22 @@ resource "google_cloudfunctions2_function" "function" {
     google_project_service.artifactregistry_api,
     google_project_service.cloudbuild_api,
   ]
+}
+
+data "google_iam_policy" "noauth" {
+  binding {
+    role = "roles/run.invoker"
+    members = [
+      "allUsers",
+    ]
+  }
+}
+
+resource "google_cloud_run_service_iam_policy" "noauth" {
+  location = var.gcp_region
+  service  = local.api_function_name
+
+  policy_data = data.google_iam_policy.noauth.policy_data
 }
 
 resource "google_compute_region_network_endpoint_group" "function_neg" {
