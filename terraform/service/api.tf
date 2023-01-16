@@ -103,7 +103,7 @@ resource "google_compute_region_network_endpoint_group" "function_neg" {
   name                  = "${var.service_name_short}-neg-${var.environment}"
   network_endpoint_type = "SERVERLESS"
   region                = var.gcp_region
-  cloud_function {
-    function = google_cloudfunctions2_function.function.name
+  cloud_run {
+    service = google_cloudfunctions2_function.function.name
   }
 }
