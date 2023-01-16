@@ -69,13 +69,17 @@ jobs:
         if: github.event.deployment.task == 'deploy'
         shell: bash
         run: |
-            [[ -f "plan-${{ github.event.deployment.environment }}-service-${{ github.run_id }}.tfplan" ]] && \
-            terraform apply \
-            -lock-timeout=3500s \
-            -auto-approve \
-            -no-color \
-            -input=false \
-            "plan-${{ github.event.deployment.environment }}-service-${{ github.run_id }}.tfplan" || echo "No planned changes"
+            if [[ -f "plan-${{ github.event.deployment.environment }}-service-${{ github.run_id }}.tfplan" ]]
+            then
+              terraform apply \
+              -lock-timeout=3500s \
+              -auto-approve \
+              -no-color \
+              -input=false \
+              "plan-${{ github.event.deployment.environment }}-service-${{ github.run_id }}.tfplan"
+            else
+               echo "No planned changes"
+            fi
         working-directory: terraform/service-${{ github.event.deployment.environment }}
       - name: terraform init - routing
         shell: bash
@@ -103,13 +107,17 @@ jobs:
       - name: terraform apply - routing
         shell: bash
         run: |
-            [[ -f "plan-${{ github.event.deployment.environment }}-routing-${{ github.run_id }}.tfplan" ]] && \
-            terraform apply \
-            -lock-timeout=3500s \
-            -auto-approve \
-            -no-color \
-            -input=false \
-            "plan-${{ github.event.deployment.environment }}-routing-${{ github.run_id }}.tfplan" || echo "No planned changes"
+            if [[ -f "plan-${{ github.event.deployment.environment }}-routing-${{ github.run_id }}.tfplan" ]]
+            then
+              terraform apply \
+              -lock-timeout=3500s \
+              -auto-approve \
+              -no-color \
+              -input=false \
+              "plan-${{ github.event.deployment.environment }}-routing-${{ github.run_id }}.tfplan"
+            else
+              echo "No planned changes"
+            fi
         working-directory: terraform/routing-${{ github.event.deployment.environment }}
       - name: mark deployment as successful
         if: ${{ success() }}
