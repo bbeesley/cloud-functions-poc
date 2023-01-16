@@ -123,6 +123,9 @@ data "google_compute_region_network_endpoint_group" "lb_default" {
   for_each = toset(var.run_regions)
   name     = "${var.service_name_short}-neg-${var.environment}"
   region   = each.value
+  depends_on = [
+    google_project_service.compute_api,
+  ]
 }
 
 resource "google_compute_backend_service" "lb_default" {
