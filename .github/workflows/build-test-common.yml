@@ -65,6 +65,7 @@ jobs:
       - name: upload artifacts
         env:
           INPUT_SHA: ${{ inputs.commit }}
+          DEBUG: 'true'
         run: |
           npx lerna run push
   plan:

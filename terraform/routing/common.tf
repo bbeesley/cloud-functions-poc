@@ -82,8 +82,8 @@ resource "google_compute_managed_ssl_certificate" "lb_default" {
 }
 
 resource "google_compute_url_map" "lb_default" {
-  name        = "${var.service_name_short}-url-map-${var.environment}"
-  description = "Routing table for ${var.service_name}"
+  name            = "${var.service_name_short}-url-map-${var.environment}"
+  description     = "Routing table for ${var.service_name}"
   default_service = google_compute_backend_service.lb_default.id
 
   path_matcher {
@@ -100,8 +100,8 @@ resource "google_compute_url_map" "lb_default" {
 }
 
 resource "google_compute_target_https_proxy" "lb_default" {
-  name     = "${var.service_name_short}-lb-${var.environment}"
-  url_map  = google_compute_url_map.lb_default.id
+  name    = "${var.service_name_short}-lb-${var.environment}"
+  url_map = google_compute_url_map.lb_default.id
   ssl_certificates = [
     google_compute_managed_ssl_certificate.lb_default.name
   ]
@@ -121,8 +121,8 @@ resource "google_compute_global_forwarding_rule" "lb_default" {
 
 data "google_compute_region_network_endpoint_group" "lb_default" {
   for_each = toset(var.run_regions)
-  name = "${var.service_name_short}-neg-${var.environment}"
-  region = each.value
+  name     = "${var.service_name_short}-neg-${var.environment}"
+  region   = each.value
 }
 
 resource "google_compute_backend_service" "lb_default" {
@@ -155,7 +155,7 @@ resource "google_dns_record_set" "lb_default" {
 }
 
 resource "google_compute_url_map" "https_default" {
-  name     = "${var.service_name_short}-https-url-map-${var.environment}"
+  name = "${var.service_name_short}-https-url-map-${var.environment}"
 
   default_url_redirect {
     redirect_response_code = "MOVED_PERMANENTLY_DEFAULT"
@@ -165,8 +165,8 @@ resource "google_compute_url_map" "https_default" {
 }
 
 resource "google_compute_target_http_proxy" "https_default" {
-  name     = "${var.service_name_short}-http-proxy-${var.environment}"
-  url_map  = google_compute_url_map.https_default.id
+  name    = "${var.service_name_short}-http-proxy-${var.environment}"
+  url_map = google_compute_url_map.https_default.id
 
   depends_on = [
     google_compute_url_map.https_default
