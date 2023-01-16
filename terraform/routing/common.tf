@@ -41,10 +41,6 @@ variable "domain_name" {
   description = "Domain to route traffic from"
   type        = string
 }
-variable "base_route" {
-  description = "Base route for the api"
-  type        = string
-}
 variable "run_regions" {
   type    = list(string)
   default = ["europe-west2"]
