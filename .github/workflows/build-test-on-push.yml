@@ -20,6 +20,4 @@ jobs:
     steps:
       - name: trigger deployment
         run: |
-          curl -X POST https://api.github.com/repos/${{ github.repository }}/deployments \
-          -u ${{ secrets.GH_PA_TOKEN }} \
-          --data '{"ref": "${{ github.sha }}", "auto_merge": false, "environment": "dev", "description": "Deploy ref ${{ github.sha }} to dev", "production_environment": false, "required_contexts": [] }'
+          gh api --method POST repos/${{ github.repository }}/deployments -f ref=${{ github.sha }} -f environment=dev -f description="Deploy ref ${{ github.sha }} to def" -f required_contexts=false
