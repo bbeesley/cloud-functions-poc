@@ -72,6 +72,12 @@ resource "google_compute_global_address" "lb_default" {
   address_type = "EXTERNAL"
   ip_version   = "IPV4"
 }
+data "google_compute_global_address" "lb_default" {
+  name         = "${var.service_name_short}-external-${var.environment}"
+  depends_on = [
+    google_compute_global_address.lb_default
+  ]
+}
 
 resource "google_compute_managed_ssl_certificate" "lb_default" {
   name = "${var.service_name_short}-ssl-cert-${var.environment}"
@@ -114,7 +120,7 @@ resource "google_compute_global_forwarding_rule" "lb_default" {
   name                  = "${var.service_name_short}-lb-fr-${var.environment}"
   load_balancing_scheme = "EXTERNAL_MANAGED"
   target                = google_compute_target_https_proxy.lb_default.id
-  ip_address            = google_compute_global_address.lb_default.id
+  ip_address            = data.google_compute_global_address.lb_default.address
   port_range            = "443"
   depends_on            = [google_compute_target_https_proxy.lb_default]
 }
