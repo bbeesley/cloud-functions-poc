@@ -133,7 +133,7 @@ resource "google_compute_backend_service" "lb_default" {
   load_balancing_scheme = "EXTERNAL_MANAGED"
 
   dynamic "backend" {
-    for_each = toset(data.google_compute_region_network_endpoint_group.lb_default[*].id)
+    for_each = toset([for o in data.google_compute_region_network_endpoint_group.lb_default : o.id])
     content {
       balancing_mode  = "UTILIZATION"
       capacity_scaler = 0.85
