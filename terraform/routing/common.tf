@@ -60,7 +60,6 @@ resource "google_compute_global_address" "lb_default" {
   name         = "${var.service_name_short}-external-${var.environment}"
   address_type = "EXTERNAL"
   ip_version   = "IPV4"
-  network_tier = "PREMIUM"
 }
 
 resource "google_compute_managed_ssl_certificate" "lb_default" {
