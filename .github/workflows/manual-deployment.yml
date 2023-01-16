@@ -1,0 +1,43 @@
+name: Manual Deployment Trigger 🧑‍🚀
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'The environment to deploy to'
+        required: true
+        default: 'dev'
+      ref:
+        description: 'Branch or commit SHA to deploy from'
+        required: true
+        default: 'main'
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: contains(fromJSON('["prod","stage", "test", "dev"]'), github.event.inputs.environment )
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v3
+        name: validate ref existence
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.inputs.ref }}
+      - name: get canonical commit ref
+        id: canonical-commit-ref
+        run: echo "::set-output name=ref::$(git log --grep 'skip ci' --invert-grep -n 1 --pretty='format:%H')"
+      - name: check commit ref presence in default branch
+        if: contains(fromJSON('["prod","stage"]'), github.event.inputs.environment )
+        run: git branch --remote --contains ${{ steps.canonical-commit-ref.outputs.ref }} | grep -m 1 -q "${{ github.event.repository.default_branch }}" && echo "commit ref found in default branch ✅" || (echo "::error::Only commit refs present in default branch can be deployed to this env\!" && false)
+      - name: trigger deployment event
+        run: |
+          curl -X POST https://api.github.com/repos/${{ github.repository }}/deployments \
+          -u ${{ secrets.GH_PA_TOKEN }} \
+          --data "{\"ref\": \"${{ steps.canonical-commit-ref.outputs.ref }}\", \"auto_merge\": false, \"environment\": \"${{ github.event.inputs.environment }}\", \"task\": \"${{ github.event.inputs.task }}\", \"description\": \"Deploy ref ${{ github.event.inputs.ref }} to ${{ github.event.inputs.environment }}\", \"required_contexts\": [], \"production_environment\": ${{ github.event.inputs.environment == 'prod' }} }"
+  no-deploy:
+    runs-on: ubuntu-latest
+    if: ${{ !contains(fromJSON('["prod","stage", "test", "dev"]'), github.event.inputs.environment ) }}
+    timeout-minutes: 5
+    steps:
+      - name: log invalid input
+        run: |
+          echo "::error::Unknown environment param: ${{ github.event.inputs.environment }}"
+          echo "::error::Allowed environments are 'dev', 'test', 'stage' and 'prod'"

@@ -1,0 +1,3 @@
+region         = "eu-central-1"
+bucket         = "deployments-poc-terraform-remote-state"
+prefix            = "services/cloud-functions-poc/prod/cloud-functions-poc-service"

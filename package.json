@@ -1,0 +1,24 @@
+{
+  "name": "root",
+  "private": true,
+  "scripts": {
+    "terraform:fmt": "find terraform -type d -maxdepth 1 -exec terraform fmt -write=true \\{\\} \\;"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "lerna": "^6.4.0",
+    "xo": "^0.53.1"
+  },
+  "xo": {
+    "space": true,
+    "prettier": true,
+    "rules": {
+      "func-names": [
+        "error",
+        "always"
+      ]
+    }
+  }
+}

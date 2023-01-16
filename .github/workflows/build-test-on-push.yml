@@ -1,0 +1,25 @@
+name: Build, Test & Publish Main
+on:
+  push:
+concurrency: ci-${{ github.ref}}-${{ github.event_name }}
+jobs:
+  build-and-test:
+    if: github.ref_name == github.event.repository.default_branch && !contains( github.event.head_commit.message, 'skip ci' )
+    uses: ./.github/workflows/build-test-common.yml
+    secrets: inherit
+    with:
+      actor: ${{ github.actor }}
+      ref: ${{ github.ref }}
+      is_main_branch: true
+      commit: ${{ github.sha }}
+  trigger-deploy-dev:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref_name == github.event.repository.default_branch && !contains( github.event.head_commit.message, 'skip-ci' )
+    timeout-minutes: 5
+    steps:
+      - name: trigger deployment
+        run: |
+          curl -X POST https://api.github.com/repos/${{ github.repository }}/deployments \
+          -u ${{ secrets.GH_PA_TOKEN }} \
+          --data '{"ref": "${{ github.sha }}", "auto_merge": false, "environment": "dev", "description": "Deploy ref ${{ github.sha }} to dev", "production_environment": false, "required_contexts": [] }'

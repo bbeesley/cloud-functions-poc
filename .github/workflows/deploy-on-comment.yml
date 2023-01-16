@@ -1,0 +1,32 @@
+name: deploy on PR comment
+on:
+  issue_comment:
+    types: [created]
+jobs:
+  trigger-deployment:
+    name: trigger deployment on comment
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: github.event.comment.body == 'deploy dev' || github.event.comment.body == 'deploy test' || github.event.comment.body == 'deploy prod'
+    steps:
+      - name: parse comment and trigger deployment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PA_TOKEN }}
+          COMMENT: ${{ github.event.comment.body }}
+        run: |
+          export ENVIRONMENT="$(echo $COMMENT | sed 's|deploy ||')"
+          export PR_NUMBER="${{ github.event.issue.number }}"
+          export BRANCH="$(gh pr view -R ${{ github.repository }} ${PR_NUMBER} --json headRefName -q '.headRefName')"
+          gh workflow run 'manual-deployment.yml' --repo ${{ github.repository }} -r "${BRANCH}" -f environment="${ENVIRONMENT}" -f ref="${BRANCH}"
+          echo "Started manual deployment for BRANCH: ${BRANCH} to ENVIRONMENT: ${ENVIRONMENT}"
+      - name: react on success
+        uses: dkershner6/reaction-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          reaction: "rocket"
+      - name: react on failure
+        if: ${{ failure() }}
+        uses: dkershner6/reaction-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          reaction: "confused"
