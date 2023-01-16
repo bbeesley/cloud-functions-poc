@@ -13,9 +13,23 @@ locals {
   })
 }
 
+resource "google_project_service" "iam_api" {
+  service = "iam.googleapis.com"
+
+  timeouts {
+    create = "30m"
+    update = "40m"
+  }
+
+  disable_dependent_services = true
+}
+
 resource "google_service_account" "account" {
   account_id   = local.service_account_id
   display_name = "Service account for the cloud fn api"
+  depends_on = [
+    google_project_service.iam_api,
+  ]
 }
 
 resource "google_cloudfunctions2_function" "function" {
