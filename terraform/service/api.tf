@@ -24,6 +24,17 @@ resource "google_project_service" "iam_api" {
   disable_dependent_services = true
 }
 
+resource "google_project_service" "cloudfunctions_api" {
+  service = "cloudfunctions.googleapis.com"
+
+  timeouts {
+    create = "30m"
+    update = "40m"
+  }
+
+  disable_dependent_services = true
+}
+
 resource "google_service_account" "account" {
   account_id   = local.service_account_id
   display_name = "Service account for the cloud fn api"
@@ -60,6 +71,9 @@ resource "google_cloudfunctions2_function" "function" {
     all_traffic_on_latest_revision   = true
     service_account_email            = google_service_account.account.email
   }
+  depends_on = [
+    google_project_service.cloudfunctions_api,
+  ]
 }
 
 resource "google_compute_region_network_endpoint_group" "function_neg" {
