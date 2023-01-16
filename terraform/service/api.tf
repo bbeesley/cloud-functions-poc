@@ -99,13 +99,19 @@ resource "google_cloudfunctions2_function" "function" {
   ]
 }
 
-resource "google_cloud_run_service_iam_binding" "noauth" {
+data "google_iam_policy" "admin" {
+  binding {
+    role = "roles/run.invoker"
+    members = [
+      "allUsers",
+    ]
+  }
+}
+
+resource "google_cloud_run_service_iam_policy" "noauth" {
   location = var.gcp_region
   service  = local.api_function_name
-  role     = "roles/run.invoker"
-  members = [
-    "allUsers",
-  ]
+  policy_data = data.google_iam_policy.noauth.policy_data
 }
 
 resource "google_compute_region_network_endpoint_group" "function_neg" {
