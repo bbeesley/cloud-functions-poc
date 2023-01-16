@@ -45,6 +45,16 @@ resource "google_project_service" "artifactregistry_api" {
 
   disable_dependent_services = true
 }
+resource "google_project_service" "cloudbuild_api" {
+  service = "cloudbuild.googleapis.com"
+
+  timeouts {
+    create = "30m"
+    update = "40m"
+  }
+
+  disable_dependent_services = true
+}
 
 resource "google_service_account" "account" {
   account_id   = local.service_account_id
@@ -85,6 +95,7 @@ resource "google_cloudfunctions2_function" "function" {
   depends_on = [
     google_project_service.cloudfunctions_api,
     google_project_service.artifactregistry_api,
+    google_project_service.cloudbuild_api,
   ]
 }
 
