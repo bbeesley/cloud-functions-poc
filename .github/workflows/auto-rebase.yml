@@ -1,4 +1,4 @@
-name: Request Dependabot Rebase
+name: Request Dependabot Rebase 🤖
 on:
   push:
   release:

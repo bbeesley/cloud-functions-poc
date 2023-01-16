@@ -1,4 +1,4 @@
-name: deploy on PR comment
+name: Deploy on PR Comment 🗣️
 on:
   issue_comment:
     types: [created]

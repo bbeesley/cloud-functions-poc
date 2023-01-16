@@ -1,4 +1,4 @@
-name: Build & Test PR
+name: Build & Test PR 🧪
 on:
   pull_request_target:
     types: [opened, synchronize, edited]

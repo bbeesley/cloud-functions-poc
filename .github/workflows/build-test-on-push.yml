@@ -1,4 +1,4 @@
-name: Build, Test & Publish Main
+name: Build, Test & Release 🧪🚀
 on:
   push:
 concurrency: ci-${{ github.ref}}-${{ github.event_name }}
