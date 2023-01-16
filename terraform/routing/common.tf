@@ -42,8 +42,8 @@ variable "domain_name" {
   type        = string
 }
 variable "run_regions" {
-  type    = list(string)
-  default = ["europe-west2"]
+  type    = set(string)
+  default = toset(["europe-west2"])
 }
 
 locals {
