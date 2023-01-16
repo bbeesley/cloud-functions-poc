@@ -27,7 +27,7 @@
     "url": "https://github.com/bbeesley/cloud-functions-poc/issues"
   },
   "devDependencies": {
-    "@beesley/push-function-zips": "^2.0.2",
+    "@beesley/push-function-zips": "^2.0.3",
     "@beesley/tsconfig": "^1.1.4",
     "ava": "^5.1.1",
     "ts-node": "^10.9.1",
