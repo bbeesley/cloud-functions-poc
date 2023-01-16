@@ -20,5 +20,5 @@ jobs:
     steps:
       - name: trigger deployment
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PA_TOKEN }}
-        run: gh api --method POST /repos/${{ github.repository }}/deployments -f ref=${{ github.sha }} -f environment=dev -f description="Deploy ref ${{ github.sha }} to def" -f required_contexts=false
+          GITHUB_TOKEN: ${{ secrets.MY_PA_TOKEN }}
+        run: gh api --method POST /repos/${{ github.repository }}/deployments -f ref=${{ github.sha }} -f environment=dev -f description="Deploy ref ${{ github.sha }} to def" -f production_environment=false
