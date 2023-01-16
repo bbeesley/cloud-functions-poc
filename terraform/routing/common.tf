@@ -137,7 +137,7 @@ data "google_compute_region_network_endpoint_group" "lb_default" {
 resource "google_compute_backend_service" "lb_default" {
   name                  = "${var.service_name_short}-backend-${var.environment}"
   load_balancing_scheme = "EXTERNAL_MANAGED"
-  type = "HTTPS"
+  protocol              = "HTTPS"
 
   dynamic "backend" {
     for_each = toset([for o in data.google_compute_region_network_endpoint_group.lb_default : o.id])
