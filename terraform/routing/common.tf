@@ -56,6 +56,17 @@ provider "google-beta" {
   zone    = var.gcp_zone
 }
 
+resource "google_project_service" "compute_api" {
+  service = "compute.googleapis.com"
+
+  timeouts {
+    create = "30m"
+    update = "40m"
+  }
+
+  disable_dependent_services = true
+}
+
 resource "google_compute_global_address" "lb_default" {
   name         = "${var.service_name_short}-external-${var.environment}"
   address_type = "EXTERNAL"
