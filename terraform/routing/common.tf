@@ -120,7 +120,7 @@ resource "google_compute_global_forwarding_rule" "lb_default" {
   name                  = "${var.service_name_short}-lb-fr-${var.environment}"
   load_balancing_scheme = "EXTERNAL_MANAGED"
   target                = google_compute_target_https_proxy.lb_default.id
-  ip_address            = data.google_compute_global_address.lb_default.address
+  ip_address            = google_compute_global_address.lb_default.id
   port_range            = "443"
   depends_on            = [google_compute_target_https_proxy.lb_default]
 }
@@ -160,7 +160,7 @@ resource "google_dns_record_set" "lb_default" {
 
   managed_zone = var.dns_zone
 
-  rrdatas = [google_compute_global_address.lb_default.self_link]
+  rrdatas = [data.google_compute_global_address.lb_default.address]
 }
 
 resource "google_compute_url_map" "https_default" {
