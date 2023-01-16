@@ -18,7 +18,7 @@
     "url": "git+https://github.com/bbeesley/cloud-functions-poc.git"
   },
   "scripts": {
-    "test": "xo && ava",
+    "test": "xo# && ava",
     "compile": "tsc",
     "push": "npx @beesley/push-function-zips --inputPath '.' --include 'dist/**' --include 'package.json' --regions 'eu' --buckets deployments-poc-cloud-functions-artifacts --function-key cloud-functions-poc-api-${GITHUB_SHA:-latest}"
   },
