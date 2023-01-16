@@ -99,7 +99,7 @@ resource "google_cloudfunctions2_function" "function" {
   ]
 }
 
-data "google_iam_policy" "admin" {
+data "google_iam_policy" "noauth" {
   binding {
     role = "roles/run.invoker"
     members = [
