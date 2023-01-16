@@ -25,6 +25,7 @@ jobs:
         if: github.actor == 'dependabot[bot]'
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PA_TOKEN }}
+        shell: bash
         run: |
           gh pr review --approve || true
           gh pr merge --auto --rebase || true

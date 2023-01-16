@@ -10,6 +10,7 @@ jobs:
     steps:
       - id: prod
         if: github.event.deployment.environment == 'prod'
+        shell: bash
         run: echo "credentials_key_name=SERVICE_ACCOUNT_KEY" >> $GITHUB_OUTPUT
   deploy:
     name: 'deploy ref ${{ github.event.deployment.ref }} to ${{ github.event.deployment.environment }}'
@@ -31,6 +32,7 @@ jobs:
         with:
           credentials_json: ${{ secrets[needs.set-config.outputs.credentials-key] }}
       - name: prepare terraform files for ${{ github.event.deployment.environment }} environment
+        shell: bash
         run: |
           cp -r terraform/service/ terraform/service-${{ github.event.deployment.environment }}
           cp -r terraform/routing/ terraform/routing-${{ github.event.deployment.environment }}
@@ -39,10 +41,12 @@ jobs:
         with:
           terraform_version: ${{ env.TERRAFORM_VERSION }}
       - name: setup github http auth
+        shell: bash
         run: |
           echo "https://bbeesley-bot:${{ secrets.GH_PA_TOKEN }}@github.com" > "${HOME}/.git-credentials"
           git config --global credential.helper store
       - name: terraform init - service
+        shell: bash
         run: |
           terraform init \
           -backend-config="config/${{ github.event.deployment.environment }}/config.remote" \
@@ -50,6 +54,7 @@ jobs:
           -lock=false
         working-directory: terraform/service-${{ github.event.deployment.environment }}
       - name: terraform plan - service
+        shell: bash
         run: |
             terraform plan \
             -var-file="config/${{ github.event.deployment.environment }}/terraform.tfvars" \
@@ -62,6 +67,7 @@ jobs:
         working-directory: terraform/service-${{ github.event.deployment.environment }}
       - name: terraform apply - service
         if: github.event.deployment.task == 'deploy'
+        shell: bash
         run: |
             [[ -f "plan-${{ github.event.deployment.environment }}-service-${{ github.run_id }}.tfplan" ]] && \
             terraform apply \
@@ -72,6 +78,7 @@ jobs:
             "plan-${{ github.event.deployment.environment }}-service-${{ github.run_id }}.tfplan" || echo "No planned changes"
         working-directory: terraform/service-${{ github.event.deployment.environment }}
       - name: terraform init - routing
+        shell: bash
         run: |
           terraform init \
           -backend-config="config/${{ github.event.deployment.environment }}/config.remote" \
@@ -82,6 +89,7 @@ jobs:
         env:
           TF_VAR_newrelic_license_key: ${{ secrets[needs.set-config.outputs.nrLicenceSecretName] }}
           TF_VAR_newrelic_api_key: ${{ secrets[needs.set-config.outputs.nrApiKeySecretName] }}
+        shell: bash
         run: |
             terraform plan \
             -var-file="config/${{ github.event.deployment.environment }}/terraform.tfvars" \
@@ -93,6 +101,7 @@ jobs:
             -out="plan-${{ github.event.deployment.environment }}-routing-${{ github.run_id }}.tfplan"
         working-directory: terraform/routing-${{ github.event.deployment.environment }}
       - name: terraform apply - routing
+        shell: bash
         run: |
             [[ -f "plan-${{ github.event.deployment.environment }}-routing-${{ github.run_id }}.tfplan" ]] && \
             terraform apply \
@@ -104,18 +113,21 @@ jobs:
         working-directory: terraform/routing-${{ github.event.deployment.environment }}
       - name: mark deployment as successful
         if: ${{ success() }}
+        shell: bash
         run: |
           curl -X POST https://api.github.com/repos/${{ github.repository }}/deployments/${{ github.event.deployment.id }}/statuses \
           -u ${{ secrets.GH_PA_TOKEN }} \
           --data '{"state": "success", "environment": "${{ github.event.deployment.environment }}", "description": "Completed deployment of ${{ github.event.deployment.ref }} to ${{ github.event.deployment.environment }}"}'
       - name: mark deployment as failed
         if: ${{ failure() }}
+        shell: bash
         run: |
           curl -X POST https://api.github.com/repos/${{ github.repository }}/deployments/${{ github.event.deployment.id }}/statuses \
           -u ${{ secrets.GH_PA_TOKEN }} \
           --data '{"state": "failure", "environment": "${{ github.event.deployment.environment }}", "description": "Failed deployment of ${{ github.event.deployment.ref }} to ${{ github.event.deployment.environment }}"}'
       - name: mark deployment as cancelled
         if: ${{ cancelled() }}
+        shell: bash
         run: |
           curl -X POST https://api.github.com/repos/${{ github.repository }}/deployments/${{ github.event.deployment.id }}/statuses \
           -u ${{ secrets.GH_PA_TOKEN }} \

@@ -21,4 +21,5 @@ jobs:
       - name: trigger deployment
         env:
           GITHUB_TOKEN: ${{ secrets.MY_PA_TOKEN }}
+        shell: bash
         run: gh api --method POST /repos/${{ github.repository }}/deployments -f ref=${{ github.sha }} -f environment=prod -f description="Deploy ref ${{ github.sha }} to prod" -F production_environment=false -f required_contexts[]="build-and-test / upload-fn-zips"

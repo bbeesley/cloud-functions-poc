@@ -13,6 +13,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PA_TOKEN }}
           COMMENT: ${{ github.event.comment.body }}
+        shell: bash
         run: |
           export ENVIRONMENT="$(echo $COMMENT | sed 's|deploy ||')"
           export PR_NUMBER="${{ github.event.issue.number }}"
