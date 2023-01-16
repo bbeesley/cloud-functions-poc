@@ -73,7 +73,7 @@ resource "google_compute_global_address" "lb_default" {
   ip_version   = "IPV4"
 }
 data "google_compute_global_address" "lb_default" {
-  name         = "${var.service_name_short}-external-${var.environment}"
+  name = "${var.service_name_short}-external-${var.environment}"
   depends_on = [
     google_compute_global_address.lb_default
   ]
@@ -146,13 +146,14 @@ resource "google_compute_backend_service" "lb_default" {
       group           = backend.value
     }
   }
-  enable_cdn  = true
+  enable_cdn = true
   cdn_policy {
-    cache_mode = "CACHE_ALL_STATIC"
-    default_ttl = 3600
-    client_ttl  = 7200
-    max_ttl     = 10800
-    negative_caching = true
+    cache_mode                   = "CACHE_ALL_STATIC"
+    default_ttl                  = 3600
+    client_ttl                   = 7200
+    max_ttl                      = 10800
+    negative_caching             = true
+    signed_url_cache_max_age_sec = 7200
   }
 
   # Use an explicit depends_on clause to wait until API is enabled
