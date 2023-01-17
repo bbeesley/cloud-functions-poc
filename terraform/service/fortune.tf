@@ -24,6 +24,7 @@ resource "google_cloud_run_service" "fortune" {
   metadata {
     annotations = {
       "run.googleapis.com/client-name" = "terraform"
+      "run.googleapis.com/ingress" = "internal-and-cloud-load-balancing"
     }
   }
 
