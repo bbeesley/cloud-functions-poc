@@ -1,6 +1,25 @@
 # cloud-functions-poc
 [![Build, Test & Release 🧪🚀](https://github.com/bbeesley/cloud-functions-poc/actions/workflows/build-test-on-push.yml/badge.svg)](https://github.com/bbeesley/cloud-functions-poc/actions/workflows/build-test-on-push.yml) [![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release) [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
+- [cloud-functions-poc](#cloud-functions-poc)
+  - [description](#description)
+  - [resources](#resources)
+    - [api](#api)
+    - [fortune](#fortune)
+    - [routing](#routing)
+  - [workflows](#workflows)
+    - [Build, Test, \& Release](#build-test--release)
+      - [Build \& Test Common](#build--test-common)
+      - [Build \& Test PR](#build--test-pr)
+      - [Build, Test \& Release](#build-test--release-1)
+    - [Triggering Deployments](#triggering-deployments)
+      - [Manual Deployment Trigger](#manual-deployment-trigger)
+      - [Deployment](#deployment)
+  - [terraform](#terraform)
+    - [routing](#routing-1)
+    - [service](#service)
+    - [deployment](#deployment-1)
+
 ## description
 
 Example repository to demonstrate building, publishing and deploying a service in GCP from GitHub Actions using terraform for infrastructure as code.
@@ -16,6 +35,10 @@ The api code is can be found in `packages/api`. It just contains code, which is 
 ### fortune
 
 The code for the fortune api can be found in `packages/fortune-nodejs`. It contains code and a Dockerfile. This time it gets built using docker and tsc and then gets published to google container registry from where it can be deployed to cloud run. The terraform for this service can be seen [here](terraform/service/api.tf).
+
+### routing
+
+This repo deploys the services mentioned above, as well as the routing required to access them. That consists of dns records, a cloud cdn, and a global cloud load balancer. That single load balancer and cdn route traffic for both of the services. The backends for the load balancer are global, so if the services are deployed to multiple regions, traffic will be load balanced across them. Route mapping is done trivially by path, with traffic to https://poc.beesley.app/api being routed to the api service, and traffic to https://poc.beesley.app/fortune being routed to the fortune service. The api is used as a fallback for any other requests.
 
 ## workflows
 
