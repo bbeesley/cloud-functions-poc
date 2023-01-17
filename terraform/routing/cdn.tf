@@ -11,6 +11,11 @@ resource "google_compute_url_map" "lb_default" {
   description     = "Routing table for ${var.service_name}"
   default_service = google_compute_backend_service.api.id
 
+  host_rule {
+    hosts = ["beesley.app"]
+    path_matcher = "allpaths"
+  }
+
   path_matcher {
     name            = "allpaths"
     default_service = google_compute_backend_service.api.id
