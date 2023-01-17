@@ -34,7 +34,7 @@ jobs:
       - name: prepare terraform files for ${{ github.event.deployment.environment }} environment
         shell: bash
         run: |
-          cp -r terraform/service/ terraform/service-${{ github.event.deployment.environment }}
+          cp -r terraform/deployment/ terraform/deployment-${{ github.event.deployment.environment }}
           cp -r terraform/routing/ terraform/routing-${{ github.event.deployment.environment }}
       - name: setup terraform
         uses: hashicorp/setup-terraform@v2
@@ -52,7 +52,7 @@ jobs:
           -backend-config="config/${{ github.event.deployment.environment }}/config.remote" \
           -input=false \
           -lock=false
-        working-directory: terraform/service-${{ github.event.deployment.environment }}
+        working-directory: terraform/deployment-${{ github.event.deployment.environment }}
       - name: terraform plan - service
         shell: bash
         run: |
@@ -64,7 +64,7 @@ jobs:
             -no-color \
             -input=false \
             -out="plan-${{ github.event.deployment.environment }}-service-${{ github.run_id }}.tfplan"
-        working-directory: terraform/service-${{ github.event.deployment.environment }}
+        working-directory: terraform/deployment-${{ github.event.deployment.environment }}
       - name: terraform apply - service
         if: github.event.deployment.task == 'deploy'
         shell: bash
@@ -80,7 +80,7 @@ jobs:
             else
                echo "No planned changes"
             fi
-        working-directory: terraform/service-${{ github.event.deployment.environment }}
+        working-directory: terraform/deployment-${{ github.event.deployment.environment }}
       - name: terraform init - routing
         shell: bash
         run: |

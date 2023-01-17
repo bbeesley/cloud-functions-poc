@@ -149,7 +149,7 @@ jobs:
       - name: prepare terraform files for ${{ matrix.stage }} environment
         shell: bash
         run: |
-          cp -r terraform/service/ terraform/service-${{ matrix.stage }}
+          cp -r terraform/deployment/ terraform/deployment-${{ matrix.stage }}
           cp -r terraform/routing/ terraform/routing-${{ matrix.stage }}
       - name: setup terraform
         uses: hashicorp/setup-terraform@v2
@@ -162,17 +162,17 @@ jobs:
           git config --global credential.helper store
       - name: terraform init - service
         env:
-          TF_DATA_DIR: terraform/service-${{ matrix.stage }}.terraform
+          TF_DATA_DIR: terraform/deployment-${{ matrix.stage }}.terraform
         shell: bash
         run: |
           terraform init \
           -backend-config="config/${{ matrix.stage }}/config.remote" \
           -input=false \
           -lock=false
-        working-directory: terraform/service-${{ matrix.stage }}
+        working-directory: terraform/deployment-${{ matrix.stage }}
       - name: terraform plan - service
         env:
-          TF_DATA_DIR: terraform/service-${{ matrix.stage }}.terraform
+          TF_DATA_DIR: terraform/deployment-${{ matrix.stage }}.terraform
         shell: bash
         run: |
           terraform plan \
@@ -181,7 +181,7 @@ jobs:
           -var="commit_sha=${REF:0:10}" \
           -input=false \
           -lock=false
-        working-directory: terraform/service-${{ matrix.stage }}
+        working-directory: terraform/deployment-${{ matrix.stage }}
       - name: terraform init - routing
         env:
           TF_DATA_DIR: terraform/routing-${{ matrix.stage }}.terraform
