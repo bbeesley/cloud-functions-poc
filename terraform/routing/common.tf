@@ -43,7 +43,7 @@ variable "domain_name" {
 }
 variable "run_regions" {
   type    = list(string)
-  default = ["europe-west2", "us-central1"]
+  default = ["europe-west2"]
 }
 
 locals {
