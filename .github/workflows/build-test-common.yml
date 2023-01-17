@@ -109,20 +109,12 @@ jobs:
             packages/*/dist
             packages/*/package.json
           key: ${{ inputs.commit }}-test
-      - name: configure gcp credentials
-        uses: 'google-github-actions/auth@v1'
-        with:
-          credentials_json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
-      - name: 'set up gcloud'
-        uses: 'google-github-actions/setup-gcloud@v1'
-      - name: gcr login
-        shell: bash
-        run: gcloud auth configure-docker $CONTAINER_REGISTRY
       - name: docker build tag & publish
         env:
           REF: ${{ inputs.commit }}
         run: |
           export IMAGE_TAG="${REF:0:10}"
+          docker login -u _json_key -p '${{ secrets.SERVICE_ACCOUNT_KEY }}' "https://${CONTAINER_REGISTRY}" 2>/dev/null
           docker build -f ${{ matrix.docker-context }}/Dockerfile -t $CONTAINER_REGISTRY/$TERRAFORM_SERVICE_SHORT_NAME-${{ matrix.service }}:$IMAGE_TAG ${{ matrix.docker-context }}
           docker push $CONTAINER_REGISTRY/$TERRAFORM_SERVICE_SHORT_NAME-${{ matrix.service }}:$IMAGE_TAG
   plan:
