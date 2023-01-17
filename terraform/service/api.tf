@@ -5,8 +5,11 @@ variable "artifact_bucket_name" {
 }
 
 locals {
+  api_component_name = "api"
+  api_base_name = "${var.service_name_short}-${local.api_component_name}"
+  api_namespaced_name = "${local.api_base_name}-${var.environment}"
   service_account_id = "${var.service_name_short}-api-sc-${var.environment}"
-  api_function_name  = "${var.service_name_short}-api-${var.environment}"
+  api_function_name  = local.api_namespaced_name
   api_fn_object_name = "sc/${var.service_name}/api-${var.commit_sha}.zip"
   api_env_vars = merge(local.default_environment_variables, {
     FUNCTION_NAME = local.api_function_name

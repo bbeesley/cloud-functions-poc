@@ -37,6 +37,16 @@ variable "function_runtime" {
   type        = string
   default     = "nodejs18"
 }
+variable "container_registry" {
+  description = "registry domain for google container registry"
+  type = string
+  default = "europe-west2-docker.pkg.dev"
+}
+variable "container_repository" {
+  description = "repostiory name for google container registry"
+  type = string
+  default = "prod"
+}
 
 locals {
   build_version_ref = replace(var.commit_sha, "\"", "")

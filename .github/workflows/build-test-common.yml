@@ -125,7 +125,7 @@ jobs:
           REF: ${{ inputs.commit }}
         run: |
           export IMAGE_TAG="${REF:0:10}"
-          export IMAGE_NAME="${CONTAINER_REGISTRY}/${PROJECT_ID}/${CONTAINER_REPOSITORY}/$TERRAFORM_SERVICE_SHORT_NAME-${{ matrix.service }}:$IMAGE_TAG"
+          export IMAGE_NAME="${CONTAINER_REGISTRY}/${PROJECT_ID}/${CONTAINER_REPOSITORY}/${TERRAFORM_SERVICE_SHORT_NAME}-${{ matrix.service }}:${IMAGE_TAG}"
           docker build -f ${{ matrix.docker-context }}/Dockerfile -t "${IMAGE_NAME}" ${{ matrix.docker-context }}
           docker push "${IMAGE_NAME}"
   plan:
