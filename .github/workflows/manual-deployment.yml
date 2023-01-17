@@ -26,7 +26,7 @@ jobs:
         shell: bash
         run: echo "::set-output name=ref::$(git log --grep 'skip ci' --invert-grep -n 1 --pretty='format:%H')"
       - name: check commit ref presence in default branch
-        if: contains(fromJSON('["prod","stage"]'), github.event.inputs.environment )
+        if: contains(fromJSON('["production","stage"]'), github.event.inputs.environment )
         shell: bash
         run: git branch --remote --contains ${{ steps.canonical-commit-ref.outputs.ref }} | grep -m 1 -q "${{ github.event.repository.default_branch }}" && echo "commit ref found in default branch ✅" || (echo "::error::Only commit refs present in default branch can be deployed to this env\!" && false)
       - name: trigger deployment event
