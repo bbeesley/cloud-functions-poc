@@ -14,13 +14,6 @@ resource "google_compute_url_map" "lb_default" {
   path_matcher {
     name            = "allpaths"
     default_service = google_compute_backend_service.api.id
-    route_rules {
-      priority = 1
-      url_redirect {
-        https_redirect         = true
-        redirect_response_code = "MOVED_PERMANENTLY_DEFAULT"
-      }
-    }
     path_rule {
       paths   = ["/api"]
       service = google_compute_backend_service.api.id
