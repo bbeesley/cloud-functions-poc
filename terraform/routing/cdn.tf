@@ -12,7 +12,7 @@ resource "google_compute_url_map" "lb_default" {
   default_service = google_compute_backend_service.api.id
 
   host_rule {
-    hosts = ["poc.beesley.app"]
+    hosts        = ["poc.beesley.app"]
     path_matcher = "allpaths"
   }
 
