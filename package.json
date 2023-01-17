@@ -11,9 +11,6 @@
     "compile": "npx lerna run compile",
     "release": "lerna exec --concurrency 1 -- semantic-release -e semantic-release-monorepo --tag-format='${LERNA_PACKAGE_NAME}@\\${version}'"
   },
-  "workspaces": [
-    "packages/*"
-  ],
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.2",
     "@semantic-release/commit-analyzer": "^9.0.2",
