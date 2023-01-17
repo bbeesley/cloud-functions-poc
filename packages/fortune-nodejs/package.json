@@ -1,6 +1,6 @@
 {
   "name": "fortune-nodejs",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "description": "The fortune cookie API",
   "author": "Bill Beesley <bill.beesley@soundcloud.com>",
