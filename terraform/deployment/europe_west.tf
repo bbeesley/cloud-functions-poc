@@ -15,6 +15,8 @@ module "service_europe_west" {
   function_runtime     = var.function_runtime
   container_registry   = var.container_registry
   container_repository = var.container_repository
+  fortune_service_account_email = google_service_account.api_account.email
+  api_service_account_email = google_service_account.fortune_account.email
   depends_on = [
     google_project_service.iam_api,
     google_project_service.cloudfunctions_api,
