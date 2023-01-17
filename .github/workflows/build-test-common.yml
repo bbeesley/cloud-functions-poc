@@ -113,6 +113,9 @@ jobs:
           credentials_json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
       - name: 'set up gcloud'
         uses: 'google-github-actions/setup-gcloud@v1'
+      - name: gcr login
+        shell: bash
+        run: gcloud auth configure-docker europe-west2-docker.pkg.dev --quiet
       - name: docker build tag & publish
         env:
           REF: ${{ inputs.commit }}
