@@ -5,12 +5,10 @@ variable "gcp_project" {
 variable "gcp_region" {
   description = "The region we're deploying to"
   type        = string
-  default     = "europe-west2"
 }
 variable "gcp_zone" {
   description = "The default zone we're deploying to"
   type        = string
-  default     = "europe-west2-a"
 }
 variable "environment" {
   description = "Environment key for namespacing infrastructure"
@@ -25,27 +23,22 @@ variable "build_number" {
 variable "service_name" {
   description = "The name of this service"
   type        = string
-  default     = "cloud-functions-poc"
 }
 variable "service_name_short" {
   description = "Abbreviation of this service name"
   type        = string
-  default     = "gcp-poc"
 }
 variable "function_runtime" {
   description = "Default runtime for cloud functions"
   type        = string
-  default     = "nodejs18"
 }
 variable "container_registry" {
   description = "registry domain for google container registry"
   type        = string
-  default     = "europe-west2-docker.pkg.dev"
 }
 variable "container_repository" {
   description = "repostiory name for google container registry"
   type        = string
-  default     = "prod"
 }
 
 locals {
@@ -57,64 +50,4 @@ locals {
     ENVIRONMENT = var.environment
     REGION      = var.gcp_region
   }
-}
-
-provider "google-beta" {
-  project = var.gcp_project
-  region  = var.gcp_region
-  zone    = var.gcp_zone
-}
-
-resource "google_project_service" "iam_api" {
-  service = "iam.googleapis.com"
-
-  timeouts {
-    create = "30m"
-    update = "40m"
-  }
-
-  disable_dependent_services = true
-}
-
-resource "google_project_service" "cloudfunctions_api" {
-  service = "cloudfunctions.googleapis.com"
-
-  timeouts {
-    create = "30m"
-    update = "40m"
-  }
-
-  disable_dependent_services = true
-}
-
-resource "google_project_service" "cloudrun_api" {
-  service = "run.googleapis.com"
-
-  timeouts {
-    create = "30m"
-    update = "40m"
-  }
-
-  disable_dependent_services = true
-}
-
-resource "google_project_service" "artifactregistry_api" {
-  service = "artifactregistry.googleapis.com"
-
-  timeouts {
-    create = "30m"
-    update = "40m"
-  }
-
-  disable_dependent_services = true
-}
-resource "google_project_service" "cloudbuild_api" {
-  service = "cloudbuild.googleapis.com"
-
-  timeouts {
-    create = "30m"
-    update = "40m"
-  }
-
-  disable_dependent_services = true
 }
