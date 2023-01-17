@@ -10,7 +10,7 @@
     "postbootstrap": "npm run compile",
     "test": "npx lerna run test",
     "compile": "npx lerna run compile",
-    "release": "lerna exec --concurrency 1 -- semantic-release -e semantic-release-monorepo --tag-format='${LERNA_PACKAGE_NAME}@\\${version}'"
+    "release": "npx lerna exec --concurrency 1 -- semantic-release -e semantic-release-monorepo --tag-format='${LERNA_PACKAGE_NAME}@\\${version}'"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.2",

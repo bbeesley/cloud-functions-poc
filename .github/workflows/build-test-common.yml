@@ -113,14 +113,12 @@ jobs:
           credentials_json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
       - name: 'set up gcloud'
         uses: 'google-github-actions/setup-gcloud@v1'
-      - name: gcr login
-        shell: bash
-        run: gcloud auth configure-docker europe-west2-docker.pkg.dev
       - name: docker build tag & publish
         env:
           REF: ${{ inputs.commit }}
         run: |
           export IMAGE_TAG="${REF:0:10}"
+          gcloud auth configure-docker europe-west2-docker.pkg.dev
           docker build -f ${{ matrix.docker-context }}/Dockerfile -t $TERRAFORM_SERVICE_SHORT_NAME-${{ matrix.service }}:$IMAGE_TAG ${{ matrix.docker-context }}
           docker push $TERRAFORM_SERVICE_SHORT_NAME-${{ matrix.service }}:$IMAGE_TAG
   plan:
