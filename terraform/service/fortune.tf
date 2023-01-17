@@ -12,9 +12,6 @@ locals {
 resource "google_service_account" "fortune_account" {
   account_id   = local.fortune_service_account_id
   display_name = "Service account for the fortune api"
-  depends_on = [
-    google_project_service.iam_api,
-  ]
 }
 
 resource "google_cloud_run_service" "fortune" {
@@ -42,9 +39,6 @@ resource "google_cloud_run_service" "fortune" {
       }
     }
   }
-  depends_on = [
-    google_project_service.cloudrun_api,
-  ]
 }
 
 data "google_iam_policy" "fortune_noauth" {

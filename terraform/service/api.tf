@@ -19,9 +19,6 @@ locals {
 resource "google_service_account" "api_account" {
   account_id   = local.api_service_account_id
   display_name = "Service account for the cloud fn api"
-  depends_on = [
-    google_project_service.iam_api,
-  ]
 }
 
 resource "google_cloudfunctions2_function" "function" {
@@ -52,11 +49,6 @@ resource "google_cloudfunctions2_function" "function" {
     all_traffic_on_latest_revision   = true
     service_account_email            = google_service_account.api_account.email
   }
-  depends_on = [
-    google_project_service.cloudfunctions_api,
-    google_project_service.artifactregistry_api,
-    google_project_service.cloudbuild_api,
-  ]
 }
 
 resource "google_cloud_run_service_iam_binding" "default" {

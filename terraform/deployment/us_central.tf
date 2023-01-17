@@ -15,4 +15,11 @@ module "service_us_central" {
   function_runtime     = var.function_runtime
   container_registry   = var.container_registry
   container_repository = var.container_repository
+  depends_on = [
+    google_project_service.iam_api,
+    google_project_service.cloudfunctions_api,
+    google_project_service.cloudrun_api,
+    google_project_service.artifactregistry_api,
+    google_project_service.cloudbuild_api,
+  ]
 }
