@@ -1,17 +1,15 @@
+variable "fortune_service_account_email" {
+  description = "The service account to use for the fortune service"
+  type        = string
+}
 locals {
-  fortune_component_name     = "fortune"
-  fortune_base_name          = "${var.service_name_short}-${local.fortune_component_name}"
-  fortune_namespaced_name    = "${local.fortune_base_name}-${var.environment}"
-  fortune_container_image    = "${var.container_registry}/${var.gcp_project}/${var.container_repository}/${local.fortune_base_name}-nodejs:${var.commit_sha}"
-  fortune_service_account_id = "${local.fortune_base_name}-sc-${var.environment}"
+  fortune_component_name  = "fortune"
+  fortune_base_name       = "${var.service_name_short}-${local.fortune_component_name}"
+  fortune_namespaced_name = "${local.fortune_base_name}-${var.environment}"
+  fortune_container_image = "${var.container_registry}/${var.gcp_project}/${var.container_repository}/${local.fortune_base_name}-nodejs:${var.commit_sha}"
   fortune_env_vars = merge(local.default_environment_variables, {
     SERVICE_NAME = local.fortune_namespaced_name
   })
-}
-
-resource "google_service_account" "fortune_account" {
-  account_id   = local.fortune_service_account_id
-  display_name = "Service account for the fortune api"
 }
 
 resource "google_cloud_run_service" "fortune" {
@@ -37,6 +35,7 @@ resource "google_cloud_run_service" "fortune" {
           }
         }
       }
+      service_account_name = var.fortune_service_account_email
     }
   }
 }

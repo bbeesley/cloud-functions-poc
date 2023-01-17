@@ -68,6 +68,11 @@ variable "container_repository" {
   default     = "prod"
 }
 
+locals {
+  api_service_account_id     = "${var.service_name_short}-api-sc-${var.environment}"
+  fortune_service_account_id = "${var.service_name_short}-fortune-sc-${var.environment}"
+}
+
 provider "google-beta" {
   project = var.gcp_project
   region  = var.gcp_region
@@ -138,4 +143,14 @@ resource "google_project_service" "cloudbuild_api" {
   }
 
   disable_dependent_services = true
+}
+
+resource "google_service_account" "api_account" {
+  account_id   = local.api_service_account_id
+  display_name = "Service account for the cloud fn api"
+}
+
+resource "google_service_account" "fortune_account" {
+  account_id   = local.fortune_service_account_id
+  display_name = "Service account for the fortune api"
 }
