@@ -5,19 +5,19 @@ variable "artifact_bucket_name" {
 }
 
 locals {
-  api_component_name = "api"
-  api_base_name = "${var.service_name_short}-${local.api_component_name}"
-  api_namespaced_name = "${local.api_base_name}-${var.environment}"
-  service_account_id = "${var.service_name_short}-api-sc-${var.environment}"
-  api_function_name  = local.api_namespaced_name
-  api_fn_object_name = "sc/${var.service_name}/api-${var.commit_sha}.zip"
+  api_component_name     = "api"
+  api_base_name          = "${var.service_name_short}-${local.api_component_name}"
+  api_namespaced_name    = "${local.api_base_name}-${var.environment}"
+  api_service_account_id = "${var.service_name_short}-api-sc-${var.environment}"
+  api_function_name      = local.api_namespaced_name
+  api_fn_object_name     = "sc/${var.service_name}/api-${var.commit_sha}.zip"
   api_env_vars = merge(local.default_environment_variables, {
     FUNCTION_NAME = local.api_function_name
   })
 }
 
-resource "google_service_account" "account" {
-  account_id   = local.service_account_id
+resource "google_service_account" "api_account" {
+  account_id   = local.api_service_account_id
   display_name = "Service account for the cloud fn api"
   depends_on = [
     google_project_service.iam_api,
@@ -50,7 +50,7 @@ resource "google_cloudfunctions2_function" "function" {
     environment_variables            = local.api_env_vars
     ingress_settings                 = "ALLOW_INTERNAL_AND_GCLB"
     all_traffic_on_latest_revision   = true
-    service_account_email            = google_service_account.account.email
+    service_account_email            = google_service_account.api_account.email
   }
   depends_on = [
     google_project_service.cloudfunctions_api,
