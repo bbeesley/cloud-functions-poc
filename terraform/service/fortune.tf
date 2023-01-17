@@ -33,14 +33,16 @@ resource "google_cloud_run_service" "fortune" {
         image = local.fortune_container_image
         dynamic "env" {
           for_each = local.fortune_env_vars
-          name     = env.key
-          value    = env.value
+          content {
+            name  = env.key
+            value = env.value
+          }
         }
       }
     }
   }
   depends_on = [
-    google_project_service.run_api,
+    google_project_service.cloudrun_api,
   ]
 }
 
