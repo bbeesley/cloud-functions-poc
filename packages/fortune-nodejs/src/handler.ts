@@ -1,37 +1,20 @@
-import Hapi from '@hapi/hapi';
-import pino from 'hapi-pino';
+import express from 'express';
+import { express as lwExpress } from '@google-cloud/logging-winston';
+import * as winston from 'winston';
 import { getRandom, loadFortunes } from './fortunes.js';
 
-async function init() {
-  await loadFortunes();
-  const server = Hapi.server({
-    port: 8080,
-    host: '0.0.0.0',
-  });
+const app = express();
+const port = 8080;
+const logger = winston.createLogger();
+const loggingMiddleware = await lwExpress.makeMiddleware(logger);
+if (process.env.npm_command === 'start') app.use(loggingMiddleware);
 
-  server.route({
-    method: 'GET',
-    path: '/fortune',
-    handler(request) {
-      request.log('info', 'received request for fortune cookie');
-      return getRandom();
-    },
-  });
-  await server.register({
-    plugin: pino,
-    options: {
-      redact: ['req.headers.authorization'],
-      mergeHapiLogData: true,
-    },
-  });
+await loadFortunes();
 
-  await server.start();
-  console.log('Server running on %s', server.info.uri);
-}
-
-process.on('unhandledRejection', (error) => {
-  console.log(error);
-  process.exit(1);
+app.get('/fortune', (request, res) => {
+  res.send(getRandom());
 });
 
-await init();
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+});
