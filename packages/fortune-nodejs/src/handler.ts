@@ -11,7 +11,7 @@ async function init() {
 
   server.route({
     method: 'GET',
-    path: '/',
+    path: '/fortune',
     handler(request) {
       request.log('info', 'received request for fortune cookie');
       return getRandom();
