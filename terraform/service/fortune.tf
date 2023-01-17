@@ -18,7 +18,7 @@ resource "google_cloud_run_service" "fortune" {
     template {
       spec {
         containers {
-          image = fortune_container_image
+          image = local.fortune_container_image
         }
       }
     }
