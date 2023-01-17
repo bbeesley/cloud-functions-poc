@@ -15,7 +15,8 @@ on:
         required: true
         type: boolean
 env:
-  TERRAFORM_VERSION: '1.3.7'    
+  TERRAFORM_VERSION: '1.3.7'
+  TERRAFORM_SERVICE_SHORT_NAME: 'gcp-poc'
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -42,9 +43,40 @@ jobs:
       - name: test
         shell: bash
         run: npm test
+  version:
+    runs-on: ubuntu-latest
+    needs:
+      - test
+      - plan
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.13.0'
+      - uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            packages/*/node_modules
+            packages/*/dist
+          key: ${{ inputs.commit }}-version
+          restore-keys: |
+            ${{ inputs.commit }}-test
+      - name: release
+        if: inputs.is_main_branch
+        env:
+          GH_TOKEN: ${{ secrets.MY_PA_TOKEN }}
+        run: |
+          echo "unsafe-perm = true" >> ~/.npmrc
+          npm run release
   upload-fn-zips:
     runs-on: ubuntu-latest
-    needs: test
+    needs: version
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v3
@@ -59,7 +91,10 @@ jobs:
             node_modules
             packages/*/node_modules
             packages/*/dist
-          key: ${{ inputs.commit }}-test
+            packages/*/package.json
+          key: ${{ inputs.commit }}-version
+          restore-keys: |
+            ${{ inputs.commit }}-test
       - name: configure gcp credentials
         uses: 'google-github-actions/auth@v1'
         with:
@@ -71,6 +106,48 @@ jobs:
         shell: bash
         run: |
           npx lerna run push
+  docker-publish:
+    runs-on: ubuntu-latest
+    needs: version
+    timeout-minutes: 20
+    strategy:
+      matrix:
+        include:
+          - service: fortune-nodejs
+            docker-context: packages/fortune-nodejs
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.13.0'
+      - uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            packages/*/node_modules
+            packages/*/dist
+            packages/*/package.json
+          key: ${{ inputs.commit }}-version
+          restore-keys: |
+            ${{ inputs.commit }}-test
+      - name: configure gcp credentials
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+      - name: 'set up gcloud'
+        uses: 'google-github-actions/setup-gcloud@v1'
+      - name: gcr login
+        shell: bash
+        run: gcloud auth configure-docker europe-west2-docker.pkg.dev
+      - name: docker build tag & publish
+        env:
+          REF: ${{ inputs.commit }}
+        run: |
+          export IMAGE_TAG="${REF:0:10}"
+          docker build -f ${{ matrix.docker-context }}/Dockerfile -t $TERRAFORM_SERVICE_SHORT_NAME-${{ matrix.service }}:$IMAGE_TAG ${{ matrix.docker-context }}
+          docker push $TERRAFORM_SERVICE_SHORT_NAME-${{ matrix.service }}:$IMAGE_TAG
   plan:
     runs-on: ubuntu-latest
     timeout-minutes: 10

@@ -1,26 +1,23 @@
 {
   "name": "root",
   "private": true,
+  "engines": {
+    "node": ">=18.13.0"
+  },
   "scripts": {
     "terraform:fmt": "find terraform -type d -maxdepth 1 -exec terraform fmt -write=true \\{\\} \\;",
     "bootstrap": "npx lerna bootstrap",
-    "test": "npx lerna run test"
+    "test": "npx lerna run test",
+    "compile": "npx lerna run compile",
+    "release": "lerna exec --concurrency 1 -- semantic-release -e semantic-release-monorepo --tag-format='${LERNA_PACKAGE_NAME}@\\${version}'"
   },
   "workspaces": [
     "packages/*"
   ],
   "devDependencies": {
     "lerna": "^6.4.1",
+    "semantic-release": "^20.0.2",
+    "semantic-release-monorepo": "^7.0.5",
     "xo": "^0.53.1"
-  },
-  "xo": {
-    "space": true,
-    "prettier": true,
-    "rules": {
-      "func-names": [
-        "error",
-        "always"
-      ]
-    }
   }
 }
