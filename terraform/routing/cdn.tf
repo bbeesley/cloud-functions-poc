@@ -24,10 +24,6 @@ resource "google_compute_url_map" "lb_default" {
       service = google_compute_backend_service.api.id
     }
     path_rule {
-      paths   = ["/another-api"]
-      service = google_compute_backend_service.api.id
-    }
-    path_rule {
       paths   = ["/fortune"]
       service = google_compute_backend_service.fortune.id
     }
