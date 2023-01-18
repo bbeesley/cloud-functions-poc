@@ -3,10 +3,17 @@ import winston from 'winston';
 import express from 'express';
 import { express as lwExpress } from '@google-cloud/logging-winston';
 import { https } from 'firebase-functions';
+import { K_REVISION, K_SERVICE } from './constants.js';
 
 const app = express();
 const logger = winston.createLogger();
-const loggingMiddleware = await lwExpress.makeMiddleware(logger);
+const loggingMiddleware = await lwExpress.makeMiddleware(logger, {
+  redirectToStdout: true,
+  serviceContext: {
+    service: K_SERVICE!,
+    version: K_REVISION!,
+  },
+});
 app.use(loggingMiddleware);
 
 app.get('*', async (request, response) => {
