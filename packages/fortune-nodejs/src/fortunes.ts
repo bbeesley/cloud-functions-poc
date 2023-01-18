@@ -2,7 +2,8 @@ import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import * as url from 'node:url';
 
-const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url)); // eslint-disable-line @typescript-eslint/naming-convention
+
 const fortunes: string[] = [];
 
 export async function loadFortunes(): Promise<string[]> {

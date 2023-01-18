@@ -58,6 +58,61 @@
             "res": true
           }
         }
+      ],
+      "@typescript-eslint/naming-convention": [
+        "error",
+        {
+          "selector": "default",
+          "format": [
+            "camelCase"
+          ]
+        },
+        {
+          "selector": "variable",
+          "format": [
+            "camelCase",
+            "UPPER_CASE",
+            "PascalCase"
+          ]
+        },
+        {
+          "selector": "parameter",
+          "format": [
+            "camelCase",
+            "PascalCase"
+          ]
+        },
+        {
+          "selector": "typeLike",
+          "format": [
+            "PascalCase"
+          ]
+        },
+        {
+          "selector": "classProperty",
+          "format": [
+            "camelCase"
+          ]
+        },
+        {
+          "selector": "objectLiteralProperty",
+          "format": null
+        },
+        {
+          "selector": "typeProperty",
+          "format": null
+        },
+        {
+          "selector": "enum",
+          "format": [
+            "PascalCase",
+            "UPPER_CASE"
+          ]
+        },
+        {
+          "selector": "enumMember",
+          "format": null
+        }
       ]
     }
   },
