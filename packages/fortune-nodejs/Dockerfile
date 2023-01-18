@@ -1,4 +1,4 @@
-FROM node:hydrogen-alpine as builder
+FROM node:19-alpine as builder
 
 RUN apk update && apk upgrade && \
     apk add --no-cache openssl ca-certificates wget && \
@@ -18,7 +18,7 @@ USER node
 RUN npm ci --omit=dev \
     && rm .npmrc
 
-FROM node:hydrogen-alpine
+FROM node:19-alpine
 
 RUN apk update && apk upgrade && apk add --no-cache openssl ca-certificates
 RUN update-ca-certificates
