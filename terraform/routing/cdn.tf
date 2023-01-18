@@ -78,7 +78,7 @@ resource "google_compute_backend_service" "api" {
     default_ttl       = 3600
     client_ttl        = 7200
     max_ttl           = 10800
-    serve_while_stale = true
+    serve_while_stale = 86400
     negative_caching  = true
     negative_caching_policy {
       code = 404
@@ -121,7 +121,7 @@ resource "google_compute_backend_service" "fortune" {
     default_ttl       = 60
     client_ttl        = 7200
     max_ttl           = 10800
-    serve_while_stale = true
+    serve_while_stale = 86400
     negative_caching  = true
     negative_caching_policy {
       code = 404
