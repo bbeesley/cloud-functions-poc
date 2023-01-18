@@ -20,3 +20,11 @@ resource "google_service_account_iam_binding" "fortune_account_logging" {
     "allUsers",
   ]
 }
+
+resource "google_service_account_iam_binding" "api_account_logging" {
+  service_account_id = google_service_account.api_account.name
+  role               = "roles/logging.logWriter"
+  members = [
+    "allUsers",
+  ]
+}
