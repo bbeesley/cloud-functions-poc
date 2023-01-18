@@ -13,34 +13,20 @@ resource "google_service_account" "fortune_account" {
   display_name = "Service account for the fortune api"
 }
 
-resource "google_service_account_iam_binding" "fortune_account_logging" {
-  service_account_id = google_service_account.fortune_account.name
-  role               = "roles/logging.logWriter"
+resource "google_project_iam_binding" "logging" {
+  project = var.gcp_project
+  role    = "roles/logging.logWriter"
   members = [
-    "allUsers",
+    "serviceAccount:${google_service_account.fortune_account.email}",
+    "serviceAccount:${google_service_account.api_account.email}",
   ]
 }
 
-resource "google_service_account_iam_binding" "api_account_logging" {
-  service_account_id = google_service_account.api_account.name
-  role               = "roles/logging.logWriter"
+resource "google_project_iam_binding" "tracing" {
+  project = var.gcp_project
+  role    = "roles/cloudtrace.agent"
   members = [
-    "allUsers",
-  ]
-}
-
-resource "google_service_account_iam_binding" "fortune_account_tracing" {
-  service_account_id = google_service_account.fortune_account.name
-  role               = "roles/cloudtrace.agent"
-  members = [
-    "allUsers",
-  ]
-}
-
-resource "google_service_account_iam_binding" "api_account_tracing" {
-  service_account_id = google_service_account.api_account.name
-  role               = "roles/cloudtrace.agent"
-  members = [
-    "allUsers",
+    "serviceAccount:${google_service_account.fortune_account.email}",
+    "serviceAccount:${google_service_account.api_account.email}",
   ]
 }
