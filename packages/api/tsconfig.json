@@ -3,7 +3,9 @@
   "compilerOptions": {
     "types": ["node"],
     "outDir": "dist",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "useUnknownInCatchVariables": false,
+    "noUnusedParameters": false
   },
   "include": ["src/**/*.ts", "src/*.ts"],
   "exclude": ["src/*.test.*", "src/**/*.test.*", "src/test/*.ts"]

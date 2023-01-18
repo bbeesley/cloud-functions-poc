@@ -74,14 +74,15 @@ resource "google_compute_backend_service" "api" {
   }
   enable_cdn = true
   cdn_policy {
-    cache_mode                   = "CACHE_ALL_STATIC"
-    default_ttl                  = 3600
-    client_ttl                   = 7200
-    max_ttl                      = 10800
-    negative_caching             = true
+    cache_mode        = "CACHE_ALL_STATIC"
+    default_ttl       = 3600
+    client_ttl        = 7200
+    max_ttl           = 10800
+    serve_while_stale = true
+    negative_caching  = true
     negative_caching_policy {
       code = 404
-      ttl = 1800
+      ttl  = 1800
     }
     signed_url_cache_max_age_sec = 7200
   }
@@ -116,14 +117,15 @@ resource "google_compute_backend_service" "fortune" {
   }
   enable_cdn = true
   cdn_policy {
-    cache_mode                   = "CACHE_ALL_STATIC"
-    default_ttl                  = 60
-    client_ttl                   = 7200
-    max_ttl                      = 10800
-    negative_caching             = true
+    cache_mode        = "CACHE_ALL_STATIC"
+    default_ttl       = 60
+    client_ttl        = 7200
+    max_ttl           = 10800
+    serve_while_stale = true
+    negative_caching  = true
     negative_caching_policy {
       code = 404
-      ttl = 1800
+      ttl  = 1800
     }
     signed_url_cache_max_age_sec = 7200
   }
