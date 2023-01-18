@@ -80,3 +80,5 @@ dist
 
 # Editor config
 .vscode/
+
+.infracost
