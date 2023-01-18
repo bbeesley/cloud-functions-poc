@@ -23,7 +23,7 @@ export async function handler(
   request: Request,
   response: Response,
 ): Promise<void> {
-  logger.info({ message: 'received request', request });
+  logger.info({ message: 'received request', request, path: request.path });
   response.setHeader('Cache-Control', 'public, must-revalidate, max-age=60');
   response.send({ ok: true });
 }

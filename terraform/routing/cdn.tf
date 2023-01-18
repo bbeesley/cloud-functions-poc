@@ -9,6 +9,7 @@ resource "google_compute_managed_ssl_certificate" "lb_default" {
 resource "google_compute_url_map" "lb_default" {
   name            = "${var.service_name_short}-url-map-${var.environment}"
   description     = "Routing table for ${var.service_name}"
+  default_service = google_compute_backend_service.api.id
 
   host_rule {
     hosts        = ["poc.beesley.app"]
@@ -17,6 +18,7 @@ resource "google_compute_url_map" "lb_default" {
 
   path_matcher {
     name            = "allpaths"
+    default_service = google_compute_backend_service.api.id
     path_rule {
       paths   = ["/api"]
       service = google_compute_backend_service.api.id
@@ -77,6 +79,10 @@ resource "google_compute_backend_service" "api" {
     client_ttl                   = 7200
     max_ttl                      = 10800
     negative_caching             = true
+    negative_caching_policy {
+      code = 404
+      ttl = 1800
+    }
     signed_url_cache_max_age_sec = 7200
   }
 
@@ -115,6 +121,10 @@ resource "google_compute_backend_service" "fortune" {
     client_ttl                   = 7200
     max_ttl                      = 10800
     negative_caching             = true
+    negative_caching_policy {
+      code = 404
+      ttl = 1800
+    }
     signed_url_cache_max_age_sec = 7200
   }
 
