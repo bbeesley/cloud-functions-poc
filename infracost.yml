@@ -3,10 +3,12 @@ version: 0.1
 projects:
   - path: terraform/routing
     name: routing
+    usage_file: terraform/routing/infracost-usage.yml
     terraform_var_files:
       - config/prod/terraform.tfvars
 
   - path: terraform/deployment
     name: service
+    usage_file: terraform/deployment/infracost-usage.yml
     terraform_var_files:
       - config/prod/terraform.tfvars
