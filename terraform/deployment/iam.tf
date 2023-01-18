@@ -28,3 +28,19 @@ resource "google_service_account_iam_binding" "api_account_logging" {
     "allUsers",
   ]
 }
+
+resource "google_service_account_iam_binding" "fortune_account_tracing" {
+  service_account_id = google_service_account.fortune_account.name
+  role               = "roles/cloudtrace.agent"
+  members = [
+    "allUsers",
+  ]
+}
+
+resource "google_service_account_iam_binding" "api_account_tracing" {
+  service_account_id = google_service_account.api_account.name
+  role               = "roles/cloudtrace.agent"
+  members = [
+    "allUsers",
+  ]
+}

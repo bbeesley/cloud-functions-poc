@@ -139,3 +139,13 @@ resource "google_project_service" "cloudbuild_api" {
 
   disable_dependent_services = true
 }
+resource "google_project_service" "cloudtrace_api" {
+  service = "cloudtrace.googleapis.com"
+
+  timeouts {
+    create = "30m"
+    update = "40m"
+  }
+
+  disable_dependent_services = true
+}

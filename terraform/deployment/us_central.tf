@@ -23,5 +23,6 @@ module "service_us_central" {
     google_project_service.cloudrun_api,
     google_project_service.artifactregistry_api,
     google_project_service.cloudbuild_api,
+    google_project_service.cloudtrace_api,
   ]
 }
