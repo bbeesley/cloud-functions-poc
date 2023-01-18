@@ -12,6 +12,7 @@ if (process.env.npm_command === 'start') app.use(loggingMiddleware);
 await loadFortunes();
 
 app.get('/fortune', (request, res) => {
+  res.setHeader('Cache-Control', 'public, must-revalidate, max-age=60');
   res.send(getRandom());
 });
 

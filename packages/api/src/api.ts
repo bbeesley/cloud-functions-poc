@@ -24,5 +24,6 @@ export async function handler(
   response: Response,
 ): Promise<void> {
   logger.info({ message: 'received request', request });
+  response.setHeader('Cache-Control', 'public, must-revalidate, max-age=60');
   response.send({ ok: true });
 }
