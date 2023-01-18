@@ -2,7 +2,8 @@
   "extends": "@beesley/tsconfig/lambda.json",
   "compilerOptions": {
     "types": ["node"],
-    "outDir": "dist"
+    "outDir": "dist",
+    "skipLibCheck": true
   },
   "include": ["src/**/*.ts", "src/*.ts"],
   "exclude": ["src/*.test.*", "src/**/*.test.*", "src/test/*.ts"]
