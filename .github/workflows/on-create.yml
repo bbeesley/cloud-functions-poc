@@ -1,0 +1,21 @@
+name: Update Artifact Registry Branch
+on:
+  create:
+concurrency: ci-${{ github.ref}}-${{ github.event_name }}
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
+jobs:
+  republish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      RUSH_ALLOW_WARNINGS_IN_SUCCESSFUL_BUILD: 1
+    steps:
+      - name: display event
+        shell: bash
+        run: echo "${{ toJSON(github) }}"
+      - uses: actions/checkout@v3
+        name: checkout
+        with:
+          ref: ${{ github.ref }}
