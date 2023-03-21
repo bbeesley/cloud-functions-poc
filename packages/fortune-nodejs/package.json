@@ -180,7 +180,7 @@
     "@google-cloud/opentelemetry-cloud-trace-exporter": "^1.2.0",
     "@opentelemetry/api": "^1.4.0",
     "@opentelemetry/auto-instrumentations-node": "^0.36.0",
-    "@opentelemetry/sdk-node": "^0.35.0",
+    "@opentelemetry/sdk-node": "^0.36.1",
     "express": "^5.0.0-beta.1",
     "winston": "^3.8.2"
   }
